@@ -9,8 +9,7 @@
 #import "AdsXMLParser.h"
 #import "AdsConnect.h"
 
-static NSString *kAdsServerURL = @"http://geo-ads.heroku.com/ads.xml";
-//@"http://192.168.0.193:3000/ads.xml"; // test server  
+static NSString *kAdsServerURL = @"http://geo-ads.heroku.com/ads.xml";  
 
 @implementation AdsConnect
 
@@ -25,7 +24,6 @@ static NSString *kAdsServerURL = @"http://geo-ads.heroku.com/ads.xml";
         webData = nil;
         imageService = [[NSMutableDictionary alloc] initWithCapacity:1];
         self.delegate = nil;
-        
     }
     return self;
 }
@@ -48,7 +46,7 @@ static NSString *kAdsServerURL = @"http://geo-ads.heroku.com/ads.xml";
 - (void)dealloc 
 {
     [appKey release];
-	[webData release];
+    [webData release];
     [imageService release];
     [delegate release];
     [super dealloc];
@@ -79,8 +77,9 @@ static NSString *kAdsServerURL = @"http://geo-ads.heroku.com/ads.xml";
         return NO;
     }
     
-    NSString *urlString = [NSString stringWithFormat:@"%@?app_key=%@&latitude=%f&longitude=%f",
-                           kAdsServerURL, 
+    NSString *urlString = [NSString stringWithFormat:@"%@?udid=%@&app_key=%@&latitude=%f&longitude=%f",
+                           kAdsServerURL,
+                           [[UIDevice currentDevice] uniqueIdentifier],
                            self.appKey, 
                            coordinate.latitude, 
                            coordinate.longitude];
@@ -128,12 +127,67 @@ static NSString *kAdsServerURL = @"http://geo-ads.heroku.com/ads.xml";
         return NO;
     }
     
-    NSString *urlString = [NSString stringWithFormat:@"%@?app_key=%@&latitude=%f&longitude=%f&limit=%d",
-                           kAdsServerURL, 
+    NSString *urlString = [NSString stringWithFormat:@"%@?udid=%@&app_key=%@&latitude=%f&longitude=%f&limit=%d",
+                           kAdsServerURL,
+                           [[UIDevice currentDevice] uniqueIdentifier],
                            self.appKey, 
                            coordinate.latitude, 
                            coordinate.longitude,
                            limit];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *requestObj = [NSMutableURLRequest requestWithURL:url 
+                                                              cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
+                                                          timeoutInterval:90];
+    [requestObj setHTTPMethod:@"GET"];
+    
+    NSURLConnection *adsServerConnection = [[NSURLConnection alloc] initWithRequest:requestObj delegate:self];
+    if (adsServerConnection != nil)
+    {
+        webData = [[NSMutableData data] retain];
+        return YES;
+    }
+    return NO;
+}
+
+/* Request ads from a specific location.
+ * The location is given through the <coordinate> parameter.
+ * This call will request up to <limit> Ads. 
+ * The <limit> parameter should be a number between 1 and 30. 
+ * The returned ads will be sorted by "performance" by default.
+ * This call will return Ads from specified <categoryList>.
+ */
+- (BOOL)requestAdsFromLocation:(CLLocationCoordinate2D)coordinate 
+                         limit:(NSInteger)limit
+                      category:(NSString *)categoryList
+{
+    /* If the previous request did finish loading (or did fail)
+     * then we can send a new request to the ads server and return YES.
+     * else return NO. */
+    if (webData != nil) 
+    {
+        NSLog(@"AdsConnect: Previous request should finish loading before starting a new request.");
+        return NO;
+    }
+    if (appKey == nil)
+    {
+        NSLog(@"AdsConnect: You must set your app key before sending a request using this method.");
+        return NO;
+    }
+    if (delegate == nil)
+    {
+        NSLog(@"AdsConnect: No delegate object. You must set a delegate object before sending any request. ");
+        return NO;
+    }
+    
+    NSString *urlString = [NSString stringWithFormat:@"%@?udid=%@&app_key=%@&latitude=%f&longitude=%f&limit=%d&category=%@",
+                           kAdsServerURL,
+                           [[UIDevice currentDevice] uniqueIdentifier],
+                           self.appKey, 
+                           coordinate.latitude, 
+                           coordinate.longitude,
+                           limit,
+                           categoryList];
     
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *requestObj = [NSMutableURLRequest requestWithURL:url 
@@ -179,13 +233,70 @@ static NSString *kAdsServerURL = @"http://geo-ads.heroku.com/ads.xml";
         return NO;
     }
     
-    NSString *urlString = [NSString stringWithFormat:@"%@?app_key=%@&latitude=%f&longitude=%f&limit=%d&sort_by=%@",
-                           kAdsServerURL, 
+    NSString *urlString = [NSString stringWithFormat:@"%@?udid=%@&app_key=%@&latitude=%f&longitude=%f&limit=%d&sort_by=%@",
+                           kAdsServerURL,
+                           [[UIDevice currentDevice] uniqueIdentifier],
                            self.appKey, 
                            coordinate.latitude, 
                            coordinate.longitude,
                            limit,
                            sortOption];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *requestObj = [NSMutableURLRequest requestWithURL:url 
+                                                              cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
+                                                          timeoutInterval:90];
+    [requestObj setHTTPMethod:@"GET"];
+    
+    NSURLConnection *adsServerConnection = [[NSURLConnection alloc] initWithRequest:requestObj delegate:self];
+    if (adsServerConnection != nil)
+    {
+        webData = [[NSMutableData data] retain];
+        return YES;
+    }
+    return NO;
+}
+
+/* Request ads from a specific location.
+ * The location is given through the <coordinate> parameter.
+ * This call will request up to <limit> Ads. 
+ * The <limit> parameter should be a number between 1 and 30.
+ * The returned Ads can be sorted by "performance" or by "location".
+ * This call will return Ads from specified <categoryList>.
+ */
+- (BOOL)requestAdsFromLocation:(CLLocationCoordinate2D)coordinate 
+                         limit:(NSInteger)limit 
+                        sortBy:(NSString *)sortOption
+                      category:(NSString *)categoryList
+{
+    /* If the previous request did finish loading (or did fail)
+     * then we can send a new request to the ads server and return YES.
+     * else return NO. */
+    if (webData != nil) 
+    {
+        NSLog(@"AdsConnect: Previous request should finish loading before starting a new request.");
+        return NO;
+    }
+    if (appKey == nil)
+    {
+        NSLog(@"AdsConnect: You must set your app key before sending a request using this method.");
+        return NO;
+    }
+    if (delegate == nil)
+    {
+        NSLog(@"AdsConnect: No delegate object. You must set a delegate object before sending any request. ");
+        return NO;
+    }
+    
+    NSString *urlString = [NSString stringWithFormat:@"%@?udid=%@&app_key=%@&latitude=%f&longitude=%f&limit=%d&sort_by=%@&category=%@",
+                           kAdsServerURL,
+                           [[UIDevice currentDevice] uniqueIdentifier],
+                           self.appKey, 
+                           coordinate.latitude, 
+                           coordinate.longitude,
+                           limit,
+                           sortOption,
+                           categoryList];
     
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *requestObj = [NSMutableURLRequest requestWithURL:url 
@@ -231,6 +342,24 @@ static NSString *kAdsServerURL = @"http://geo-ads.heroku.com/ads.xml";
 /* Request ads from a specific location. 
  * The location is given through the <latitude> and <longitude> parameters.
  * This call will request up to <limit> Ads. 
+ * The <limit> parameter should be a number between 1 and 30. 
+ * The returned ads will be sorted by "performance" by default.
+ * This call will return Ads from specified <categoryList>.
+ */
+- (BOOL)requestAdsFromLatitude:(CLLocationDegrees)latitude 
+                     longitude:(CLLocationDegrees)longitude 
+                         limit:(NSInteger)limit
+                      category:(NSString *)categoryList
+{
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(latitude, longitude);
+    return [self requestAdsFromLocation:coordinate 
+                                  limit:limit
+                               category:categoryList];
+}
+
+/* Request ads from a specific location. 
+ * The location is given through the <latitude> and <longitude> parameters.
+ * This call will request up to <limit> Ads. 
  * The <limit> parameter should be a number between 1 and 30.
  * The returned Ads can be sorted by "performance" or by "location". 
  */
@@ -243,6 +372,26 @@ static NSString *kAdsServerURL = @"http://geo-ads.heroku.com/ads.xml";
     return [self requestAdsFromLocation:coordinate 
                                   limit:limit
                                  sortBy:sortOption]; 
+}
+
+/* Request ads from a specific location. 
+ * The location is given through the <latitude> and <longitude> parameters.
+ * This call will request up to <limit> Ads. 
+ * The <limit> parameter should be a number between 1 and 30.
+ * The returned Ads can be sorted by "performance" or by "location".
+ * This call will return Ads from specified <categoryList>.
+ */
+- (BOOL)requestAdsFromLatitude:(CLLocationDegrees)latitude 
+                     longitude:(CLLocationDegrees)longitude 
+                         limit:(NSInteger)limit 
+                        sortBy:(NSString *)sortOption
+                      category:(NSString *)categoryList
+{
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(latitude, longitude);
+    return [self requestAdsFromLocation:coordinate 
+                                  limit:limit
+                                 sortBy:sortOption
+                               category:categoryList];
 }
 
 /* Request ad image/thumbnail from url.
@@ -294,6 +443,7 @@ static NSString *kAdsServerURL = @"http://geo-ads.heroku.com/ads.xml";
 	[connection release];
 	[webData release];
 	webData = nil;
+    
     if ([delegate respondsToSelector:@selector(adsRequestDidFailWithError:)])
     {
         [delegate adsRequestDidFailWithError:error];

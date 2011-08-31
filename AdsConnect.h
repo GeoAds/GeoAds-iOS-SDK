@@ -31,6 +31,7 @@
 /* Request ads from a specific location.
  * The location is given through the <coordinate> parameter.
  * This call will request only one Ad. 
+ * This call will return Ads from all categories.
  */
 - (BOOL)requestAdsFromLocation:(CLLocationCoordinate2D)coordinate;
 
@@ -38,7 +39,8 @@
  * The location is given through the <coordinate> parameter.
  * This call will request up to <limit> Ads. 
  * The <limit> parameter should be a number between 1 and 30. 
- * The returned ads will be sorted by "performance" by default. 
+ * The returned ads will be sorted by "performance" by default.
+ * This call will return Ads from all categories.
  */
 - (BOOL)requestAdsFromLocation:(CLLocationCoordinate2D)coordinate 
                          limit:(NSInteger)limit;
@@ -46,16 +48,41 @@
 /* Request ads from a specific location.
  * The location is given through the <coordinate> parameter.
  * This call will request up to <limit> Ads. 
+ * The <limit> parameter should be a number between 1 and 30. 
+ * The returned ads will be sorted by "performance" by default.
+ * This call will return Ads from specified <categoryList>.
+ */
+- (BOOL)requestAdsFromLocation:(CLLocationCoordinate2D)coordinate 
+                         limit:(NSInteger)limit
+                      category:(NSString *)categoryList;
+
+/* Request ads from a specific location.
+ * The location is given through the <coordinate> parameter.
+ * This call will request up to <limit> Ads. 
  * The <limit> parameter should be a number between 1 and 30.
- * The returned Ads can be sorted by "performance" or by "location". 
+ * The returned Ads can be sorted by "performance" or by "location".
+ * This call will return Ads from all categories.
  */
 - (BOOL)requestAdsFromLocation:(CLLocationCoordinate2D)coordinate 
                          limit:(NSInteger)limit 
                         sortBy:(NSString *)sortOption;
 
 /* Request ads from a specific location.
+ * The location is given through the <coordinate> parameter.
+ * This call will request up to <limit> Ads. 
+ * The <limit> parameter should be a number between 1 and 30.
+ * The returned Ads can be sorted by "performance" or by "location".
+ * This call will return Ads from specified <categoryList>.
+ */
+- (BOOL)requestAdsFromLocation:(CLLocationCoordinate2D)coordinate 
+                         limit:(NSInteger)limit 
+                        sortBy:(NSString *)sortOption
+                      category:(NSString *)categoryList;
+
+/* Request ads from a specific location.
  * The location is given through the <latitude> and <longitude> parameters.
- * This call will request only one Ad. 
+ * This call will request only one Ad.
+ * This call will return Ads from all categories.
  */
 - (BOOL)requestAdsFromLatitude:(CLLocationDegrees)latitude 
                      longitude:(CLLocationDegrees)longitude;
@@ -64,7 +91,8 @@
  * The location is given through the <latitude> and <longitude> parameters.
  * This call will request up to <limit> Ads. 
  * The <limit> parameter should be a number between 1 and 30. 
- * The returned ads will be sorted by "performance" by default. 
+ * The returned ads will be sorted by "performance" by default.
+ * This call will return Ads from all categories.
  */
 - (BOOL)requestAdsFromLatitude:(CLLocationDegrees)latitude 
                      longitude:(CLLocationDegrees)longitude 
@@ -73,13 +101,39 @@
 /* Request ads from a specific location. 
  * The location is given through the <latitude> and <longitude> parameters.
  * This call will request up to <limit> Ads. 
+ * The <limit> parameter should be a number between 1 and 30. 
+ * The returned ads will be sorted by "performance" by default.
+ * This call will return Ads from specified <categoryList>.
+ */
+- (BOOL)requestAdsFromLatitude:(CLLocationDegrees)latitude 
+                     longitude:(CLLocationDegrees)longitude 
+                         limit:(NSInteger)limit
+                      category:(NSString *)categoryList;
+
+/* Request ads from a specific location. 
+ * The location is given through the <latitude> and <longitude> parameters.
+ * This call will request up to <limit> Ads. 
  * The <limit> parameter should be a number between 1 and 30.
- * The returned Ads can be sorted by "performance" or by "location". 
+ * The returned Ads can be sorted by "performance" or by "location".
+ * This call will return Ads from all categories.
  */
 - (BOOL)requestAdsFromLatitude:(CLLocationDegrees)latitude 
                      longitude:(CLLocationDegrees)longitude 
                          limit:(NSInteger)limit 
                         sortBy:(NSString *)sortOption;
+
+/* Request ads from a specific location. 
+ * The location is given through the <latitude> and <longitude> parameters.
+ * This call will request up to <limit> Ads. 
+ * The <limit> parameter should be a number between 1 and 30.
+ * The returned Ads can be sorted by "performance" or by "location".
+ * This call will return Ads from specified <categoryList>.
+ */
+- (BOOL)requestAdsFromLatitude:(CLLocationDegrees)latitude 
+                     longitude:(CLLocationDegrees)longitude 
+                         limit:(NSInteger)limit 
+                        sortBy:(NSString *)sortOption
+                      category:(NSString *)categoryList;
 
 /* Request ad image/thumbnail from url.
  * This method can be used to send multiple image requests.
