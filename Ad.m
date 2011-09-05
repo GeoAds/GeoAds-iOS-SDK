@@ -1,6 +1,6 @@
 //
 //  Ad.m
-//  GeoAds iOS SDK
+//  GeoAds+ iOS SDK
 //
 //  Created by Radu-Tudor Ionescu on 7/19/10.
 //  Copyright 2010 Viewlity.com. All rights reserved.

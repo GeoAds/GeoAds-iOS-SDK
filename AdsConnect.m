@@ -1,6 +1,6 @@
 //
 //  AdsConnect.m
-//  GeoAds iOS SDK
+//  GeoAds+ iOS SDK
 //
 //  Created by Radu-Tudor Ionescu on 7/1/11.
 //  Copyright 2011 Viewlity.com. All rights reserved.
@@ -9,7 +9,7 @@
 #import "AdsXMLParser.h"
 #import "AdsConnect.h"
 
-static NSString *kAdsServerURL = @"http://geo-ads.heroku.com/ads.xml";  
+static NSString *kAdsServerURL = @"http://www.geoadsplus.com/ads.xml";  
 
 @implementation AdsConnect
 
