@@ -59,6 +59,7 @@
                                   imageUrl:imageUrl 
                               thumbnailUrl:thumbnailUrl];
         [ads addObject:ad];
+        [ad release];
     }
     return (NSArray *)ads;
 }
