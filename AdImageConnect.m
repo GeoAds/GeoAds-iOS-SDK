@@ -28,12 +28,10 @@
  */
 - (id)initWithURL:(NSURL *)URL
 {
-    self = [super init];
+    self = [self init];
     if (self) 
 	{
         self.url = URL;
-        webData = nil;
-        self.delegate = nil;
     }
     return self;
 }
@@ -42,7 +40,6 @@
 {
     [url release];
     [webData release];
-    [delegate release];
     [super dealloc];
 }
 

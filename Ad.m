@@ -40,7 +40,7 @@
            imageUrl:(NSURL *)imageURL 
        thumbnailUrl:(NSURL *)thumbnailURL;
 {
-    self = [super init];
+    self = [self init];
     if (self) 
 	{
         self.title = adTitle;
@@ -50,8 +50,6 @@
         self.url = URL;
         self.imageUrl = imageURL;
         self.thumbnailUrl = thumbnailURL;
-        self.image = nil;
-        self.thumbnail = nil;
     }
     return self;
 }

@@ -32,13 +32,10 @@ static NSString *kAdsServerURL = @"http://www.geoadsplus.com/ads.xml";
  */
 - (id)initWithAppKey:(NSString *)key
 {
-    self = [super init];
+    self = [self init];
     if (self) 
 	{
         self.appKey = key;
-        webData = nil;
-        imageService = [[NSMutableDictionary alloc] initWithCapacity:1];
-        self.delegate = nil;
     }
     return self;
 }
@@ -48,7 +45,6 @@ static NSString *kAdsServerURL = @"http://www.geoadsplus.com/ads.xml";
     [appKey release];
     [webData release];
     [imageService release];
-    [delegate release];
     [super dealloc];
 }
 
@@ -533,7 +529,7 @@ static NSString *kAdsServerURL = @"http://www.geoadsplus.com/ads.xml";
     
     if ([delegate respondsToSelector:@selector(adsRequestDidLoad:)])
     {
-        NSMutableDictionary* dictionary = [[NSMutableDictionary alloc] initWithCapacity:2];
+        NSMutableDictionary* dictionary = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
         [dictionary setObject:url 
                        forKey:@"url"];
         [dictionary setObject:result 

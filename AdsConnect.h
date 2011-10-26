@@ -22,7 +22,7 @@
 }
 
 @property (nonatomic, retain) NSString *appKey;
-@property (nonatomic, retain) id<AdsConnectDelegate> delegate;
+@property (nonatomic, assign) id<AdsConnectDelegate> delegate;
 
 /* Init an AdsConnect object with your generated appKey. 
  */

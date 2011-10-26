@@ -19,7 +19,7 @@
 }
 
 @property (nonatomic, retain) NSURL *url;
-@property (nonatomic, retain) id<AdImageConnectDelegate> delegate;
+@property (nonatomic, assign) id<AdImageConnectDelegate> delegate;
 
 /* Init an AdImageConnect object with an image/thumbnail url. 
  */

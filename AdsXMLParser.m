@@ -22,7 +22,7 @@
     
     /* The last component is not an Ad. It needs to be removed. */
     [components removeLastObject];
-    NSMutableArray *ads = [[NSMutableArray alloc] initWithCapacity:[components count]];
+    NSMutableArray *ads = [[[NSMutableArray alloc] initWithCapacity:[components count]] autorelease];
     
     /* Extract data from each Ad tag. */
     for (NSString *adXML in components)
